@@ -87,31 +87,30 @@ body{
 .half{
   position:relative;
   padding:64px 6vw 96px;
-  overflow:hidden;
+  min-height:100%;
 }
 
 #cody-half{ padding-right:9vw; }
 #joseph-half{ padding-left:9vw; }
 
 /* color bleed from each side toward the centerline, so the boundary
-   reads as a gradient wash rather than a hard edge */
-#cody-half::before,
-#joseph-half::before{
-  content:'';
+   reads as a gradient wash rather than a hard edge. Lives in its own
+   full-bleed layer so it never affects the content box's size. */
+.glow{
   position:absolute;
   top:0; bottom:0;
-  width:38%;
+  width:60%;
   pointer-events:none;
   z-index:0;
   filter:blur(60px);
-  opacity:0.55;
+  opacity:0.5;
 }
-#cody-half::before{
-  right:-10%;
+#cody-half .glow{
+  right:-20%;
   background:radial-gradient(ellipse at right, var(--joseph-glow), transparent 70%);
 }
-#joseph-half::before{
-  left:-10%;
+#joseph-half .glow{
+  left:-20%;
   background:radial-gradient(ellipse at left, var(--cody-glow), transparent 70%);
 }
 
@@ -163,7 +162,7 @@ body{
   font-size:12px;
   letter-spacing:0.16em;
   text-transform:uppercase;
-  margin-bottom:14px;
+  margin-bottom:20px;
 }
 #cody-half .eyebrow{ color:var(--cody-accent); }
 #joseph-half .eyebrow{ color:var(--joseph-accent); }
@@ -181,25 +180,93 @@ body{
   margin-bottom:28px;
 }
 
-.project-list{ list-style:none; margin-top:24px; }
+/* ---------- profile header: avatar + name + handle ---------- */
+.profile-header{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  margin-bottom:24px;
+}
+.avatar{
+  flex:none;
+  width:72px; height:72px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:1.6rem;
+  color:var(--bg);
+  overflow:hidden;
+}
+#cody-half .avatar{ background:linear-gradient(160deg, var(--cody-accent), #007a00); }
+#joseph-half .avatar{ background:linear-gradient(160deg, var(--joseph-accent), #0a4f96); }
+.avatar img{ width:100%; height:100%; object-fit:cover; }
+
+.display-name{
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:1.3rem;
+  letter-spacing:-0.01em;
+  line-height:1.2;
+}
+.handle{
+  font-family:var(--font-mono);
+  font-size:13px;
+  color:var(--text-dim);
+  margin-top:2px;
+}
+
+.bio{
+  color:var(--text-dim);
+  max-width:46ch;
+  margin-bottom:24px;
+}
+
+/* ---------- stat row ---------- */
+.stats{
+  display:flex;
+  gap:28px;
+  margin-bottom:28px;
+  padding-bottom:28px;
+  border-bottom:1px solid var(--line);
+}
+.stat{ display:flex; flex-direction:column; gap:2px; }
+.stat strong{
+  font-family:var(--font-display);
+  font-size:1.15rem;
+  font-weight:700;
+}
+.stat span{
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color:var(--text-dim);
+}
+
+/* ---------- pinned list (smaller, secondary to profile header) ---------- */
+.project-list{ list-style:none; margin-top:8px; }
 .project-list li{
   border-top:1px solid var(--line);
-  padding:16px 0;
+  padding:14px 0;
   display:flex;
   justify-content:space-between;
   align-items:baseline;
   gap:16px;
 }
 .project-list li:last-child{ border-bottom:1px solid var(--line); }
-.project-list .name{ font-weight:600; }
+.project-list .name{ font-weight:600; font-size:0.95rem; }
 .project-list .tag{
   font-family:var(--font-mono);
-  font-size:12px;
+  font-size:11px;
   color:var(--text-dim);
   white-space:nowrap;
 }
 
-.links{ display:flex; flex-wrap:wrap; gap:10px; margin-top:32px; }
+/* ---------- buttons: one filled primary, rest outline pills ---------- */
+.links{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:32px; }
 .links a{
   font-family:var(--font-mono);
   font-size:12px;
@@ -207,12 +274,27 @@ body{
   text-decoration:none;
   color:var(--text);
   border:1px solid var(--line);
-  padding:9px 14px;
+  padding:9px 16px;
   border-radius:100px;
-  transition:border-color 0.2s ease, transform 0.2s ease;
+  transition:border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
 }
 #cody-half .links a:hover{ border-color:var(--cody-accent); transform:translateY(-1px); }
 #joseph-half .links a:hover{ border-color:var(--joseph-accent); transform:translateY(-1px); }
+
+.links a.primary{ color:var(--bg); border-color:transparent; font-weight:500; }
+#cody-half .links a.primary{ background:var(--cody-accent); }
+#joseph-half .links a.primary{ background:var(--joseph-accent); }
+#cody-half .links a.primary:hover{ background:#00e600; }
+#joseph-half .links a.primary:hover{ background:#4aa9ff; }
+
+.section-label{
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--text-dim);
+  margin-bottom:12px;
+}
 
 /* ---------- footer ---------- */
 footer{
@@ -230,11 +312,11 @@ footer{
   #cody-half, #joseph-half{ padding:56px 8vw 72px; }
   #cody-half{ padding-right:8vw; }
   #joseph-half{ padding-left:8vw; }
-  #cody-half::before, #joseph-half::before{
-    width:100%; height:38%; left:0; right:0;
+  .glow{
+    width:100%; height:50%; left:0; right:0; top:auto; bottom:auto;
   }
-  #cody-half::before{ top:auto; bottom:-10%; background:radial-gradient(ellipse at bottom, var(--joseph-glow), transparent 70%); }
-  #joseph-half::before{ bottom:auto; top:-10%; background:radial-gradient(ellipse at top, var(--cody-accent), transparent 70%); opacity:0.35; }
+  #cody-half .glow{ bottom:-20%; background:radial-gradient(ellipse at bottom, var(--joseph-glow), transparent 70%); }
+  #joseph-half .glow{ top:-20%; background:radial-gradient(ellipse at top, var(--cody-glow), transparent 70%); }
   .seam{ top:50%; left:0; right:0; bottom:auto; width:100%; height:1px; transform:translateY(-50%);
     background:linear-gradient(90deg, transparent 0%, var(--cody-accent) 12%, var(--joseph-accent) 88%, transparent 100%); }
   .seam-mark{ top:50%; left:50%; }
