@@ -131,6 +131,12 @@ body{
   background-position:center;
 }
 
+/* Safety net: script.js reads this tag's src, applies it as the half's
+   background, then removes the tag. If that JS doesn't run for any reason
+   (old cached script.js, JS error, etc.), this keeps the raw <img> from
+   ever rendering inline and blowing out the layout. */
+.bg-photo{ display:none !important; }
+
 /* seam: thin animated centerline + interlocking monogram */
 .seam{
   position:absolute;
